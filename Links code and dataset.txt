@@ -1,0 +1,83 @@
+Colab Link:
+https://colab.research.google.com/drive/1q8-9tYYXDuehVOiO5gipqENU-QkUDiEm?usp=sharing
+
+Dataset Link:
+Train :
+https://raw.githubusercontent.com/AbhinayHinge/Medicine-recommendation/main/Train_Data/drugsComTrain_raw.csv
+
+Test :
+https://raw.githubusercontent.com/AbhinayHinge/Medicine-recommendation/main/Test_Data/drugsComTest_raw.csv
+
+While Deployment
+Good UI
+Add Recommendation point(conditions and recommendation top 5 and bottom 5)
+Add Images about medicines
+Add Warning for consultation
+Add rating to medicine(out of 10)
+Provide Guest login(username) for ratings
+
+
+
+https://github.com/aishwarya8615/Medicare_Drug-Recommendation
+
+
+
+import pickle
+import streamlit as st
+import pandas as pd
+
+medicine_dict = pickle.load(open('Medicine_dict.pkl','rb'))
+medicine=pd.DataFrame(medicine_dict)
+st.title('Medicine Recommender System')
+
+
+# Lets Calculate an Effective Rating
+min_rating = medicine['rating'].min()
+max_rating = medicine['rating'].max()
+
+def scale_rating(rating):
+    rating -= min_rating
+    rating = rating / (max_rating - 1)
+    rating *= 5
+    rating = int(round(rating, 0))
+
+    if (int(rating) == 0 or int(rating) == 1 or int(rating) == 2):
+        return 0
+    else:
+        return 1
+medicine['eff_score'] = medicine['rating'].apply(scale_rating)
+# Calculate usefulness score
+medicine['usefulness'] = medicine['rating'] * medicine['usefulCount'] * medicine['eff_score']
+
+# Calculate mean usefulness score
+mean_usefulness = medicine['usefulness'].mean()
+
+medicine2 = medicine.drop_duplicates()
+
+
+@st.cache_data
+def recommend(condition):
+    top_drugs = medicine2[medicine2['condition'] == condition][['drugName', 'usefulness']].sort_values(by='usefulness', ascending=False).reset_index(drop=True)
+    top_drugs = top_drugs.drop_duplicates(subset=['drugName'], keep='first').head(5)
+
+    bottom_drugs = medicine2[medicine2['condition'] == condition][['drugName', 'usefulness']].sort_values(by='usefulness', ascending=True).reset_index(drop=True)
+    bottom_drugs = bottom_drugs.drop_duplicates(subset=['drugName'], keep='first').head(5)
+
+    return top_drugs, bottom_drugs
+
+
+
+
+# Get the list of unique conditions from the dataset
+conditions = medicine2['condition'].unique()
+
+selected_condition_name = st.selectbox(
+'Type or select the medical condition from dropdown',
+conditions)
+
+if st.button('Show Recommendation'):
+    top_drugs, bottom_drugs = recommend(selected_condition_name)
+    st.subheader('Top 5 Drugs')
+    st.write(top_drugs)
+    st.subheader('Bottom 5 Drugs')
+    st.write(bottom_drugs)
