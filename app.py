@@ -6,7 +6,11 @@ from textblob import TextBlob
 
 medicine_dict = pickle.load(open('Medicine_dict.pkl','rb'))
 medicine=pd.DataFrame(medicine_dict)
-st.title('Medicine Recommender System')
+
+# Load and display animated image
+with open("animation.html", "r") as f:
+    html = f.read()
+st.components.v1.html(html, height=260)
 
 
 # Lets Calculate an Effective Rating
