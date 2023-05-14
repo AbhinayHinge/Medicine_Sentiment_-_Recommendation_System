@@ -1,8 +1,8 @@
 import pickle
-
-import streamlit as st
 import pandas as pd
 import altair as alt
+import streamlit as st
+from textblob import TextBlob
 
 medicine_dict = pickle.load(open('Medicine_dict.pkl','rb'))
 medicine=pd.DataFrame(medicine_dict)
@@ -159,9 +159,6 @@ if st.button('EDA and Sentiment Analysis of Dataset'):
     image11 = Image.open('eda5.png')
     st.image(image11, caption='Average Rating of medicines')
 
-
-import streamlit as st
-from textblob import TextBlob
 
 def analyze_sentiment(text):
     blob = TextBlob(text)
