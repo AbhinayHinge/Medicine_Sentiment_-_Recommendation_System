@@ -10,7 +10,7 @@ medicine=pd.DataFrame(medicine_dict)
 # Load and display animated image
 with open("animation.html", "r") as f:
     html = f.read()
-st.components.v1.html(html, height=260)
+st.components.v1.html(html, height=200)
 
 
 # Lets Calculate an Effective Rating
