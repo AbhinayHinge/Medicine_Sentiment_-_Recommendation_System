@@ -12,6 +12,7 @@ with open("animation.html", "r") as f:
     html = f.read()
 st.components.v1.html(html, height=200)
 
+st.write("<style>h1{font-size: 30px;}</style>", unsafe_allow_html=True)
 
 # Lets Calculate an Effective Rating
 min_rating = medicine['rating'].min()
