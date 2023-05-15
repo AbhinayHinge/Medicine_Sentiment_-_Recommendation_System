@@ -149,8 +149,8 @@ if st.button('EDA and Sentiment Analysis of Dataset'):
     st.image(image2, caption='Correlation Between Sentiment and Rating')
     image3 = Image.open('Sentiment.png')
     st.image(image3, caption='Line Chart displays positive, Negative and Neutral reviews aboubt recommended medicines')
-    image4 = Image.open('SEntiment_FeatureIMP.png')
-    st.image(image2, caption='Feature Importance plot using LGBM')
+    image4 = Image.open('featureimp.png')
+    st.image(image4, caption='Feature Importance plot using LGBM')
 
     st.title("Exploratory Data Analysis")
     image5 = Image.open('eda1.png')
